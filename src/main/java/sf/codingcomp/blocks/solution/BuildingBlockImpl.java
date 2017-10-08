@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import sf.codingcomp.blocks.BuildingBlock;
+import sf.codingcomp.blocks.CircularReferenceException;
 
 public class BuildingBlockImpl implements BuildingBlock {
 	BuildingBlock upper,lower;
@@ -18,11 +19,14 @@ public class BuildingBlockImpl implements BuildingBlock {
     }
     @Override
     public void stackOver(BuildingBlock b) {
-    	
     	upper = b;
     	if(b!=null&&b.findBlockOver()!=this) {
 			b.stackUnder(this);
     		}
+    	if(findBlockUnder()!=null&&findBlockUnder().findBlockUnder()!=null&&findBlockUnder().findBlockUnder().findBlockUnder()==this)
+    	{
+    		throw new CircularReferenceException("self chained iterate list");
+    	}
     }
 
     @Override
@@ -38,6 +42,10 @@ public class BuildingBlockImpl implements BuildingBlock {
     	if(b.findBlockUnder()!=this) {
 			b.stackOver(this);
     		}
+    	if(findBlockUnder()!=null&&findBlockUnder().findBlockUnder()!=null&&findBlockUnder().findBlockUnder().findBlockUnder()==this)
+    	{
+    		throw new CircularReferenceException("self chained iterate list");
+    	}
     }
 
     @Override
