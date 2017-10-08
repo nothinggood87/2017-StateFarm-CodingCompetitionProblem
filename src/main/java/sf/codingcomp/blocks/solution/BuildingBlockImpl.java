@@ -1,39 +1,55 @@
 package sf.codingcomp.blocks.solution;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import sf.codingcomp.blocks.BuildingBlock;
 
 public class BuildingBlockImpl implements BuildingBlock {
-
-    @Override
+	BuildingBlock upper,lower;
     public Iterator<BuildingBlock> iterator() {
-        // TODO Auto-generated method stub
-        return null;
+    	ArrayList<BuildingBlock> a = new ArrayList<BuildingBlock>();
+    	BuildingBlock n = this;
+    	while(n!=null) {
+    		a.add(n);
+    		n=n.findBlockOver();
+    	}
+        return a.iterator();
     }
-
     @Override
     public void stackOver(BuildingBlock b) {
-        // TODO Auto-generated method stub
-        
+    	
+    	upper = b;
+    	if(b!=null&&b.findBlockOver()!=this) {
+			b.stackUnder(this);
+    		}
     }
 
     @Override
     public void stackUnder(BuildingBlock b) {
-        // TODO Auto-generated method stub
-        
+    	if(b==null) {
+    		lower=null;
+    		return;
+    	}
+    	if(b.findBlockUnder()!=null) {
+    		b.findBlockUnder().stackUnder(null);
+    	}
+    	lower = b;
+    	if(b.findBlockUnder()!=this) {
+			b.stackOver(this);
+    		}
     }
 
     @Override
     public BuildingBlock findBlockUnder() {
         // TODO Auto-generated method stub
-        return null;
+        return upper;
     }
 
     @Override
     public BuildingBlock findBlockOver() {
         // TODO Auto-generated method stub
-        return null;
+        return lower;
     }
 
 }
